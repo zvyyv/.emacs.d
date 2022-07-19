@@ -4,24 +4,24 @@
              '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-;; update the package metadata is the local cache is missing
-;;(unless package-archive-contents
-  ;;(package-refresh-contents))
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(eval-when-compile
-  (require 'use-package))
-
-(setq use-package-verbose t)
-
 ;; keep the installed packages in .emacs.d
 (setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
 
 (setq user-full-name "Kota Ohno"
       user-mail-address "o139974@gmail.com")
+
+;; update the package metadata is the local cache is missing
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(setq use-package-verbose t)
+(require 'use-package)
+(require 'bind-key)
+(setq load-prefer-newer t)
 
 (defconst savefile-dir (expand-file-name "savefile" user-emacs-directory))
 
@@ -47,6 +47,7 @@
 ;; mode line settings
 (line-number-mode t)
 (column-number-mode t)
+(global-display-line-numbers-mode t)
 (size-indication-mode t)
 
 (fset 'yes-or-no-p 'y-or-n-p)
