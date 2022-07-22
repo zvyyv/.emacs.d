@@ -19,7 +19,9 @@
   (package-install 'use-package))
 
 (setq use-package-verbose t)
+
 (require 'use-package)
+(require 'diminish) ; use-packageで入れる必要あるかも
 (require 'bind-key)
 (setq load-prefer-newer t)
 
@@ -31,6 +33,7 @@
 
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
+(scroll-bar-mode -1)
 
 (setq ring-bell-function 'ignore)
 
@@ -47,8 +50,9 @@
 ;; mode line settings
 (line-number-mode t)
 (column-number-mode t)
-(global-display-line-numbers-mode t)
 (size-indication-mode t)
+
+(global-display-line-numbers-mode t)
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -61,13 +65,28 @@
 
 (delete-selection-mode t)
 
+;; store all backup and autosave files in the tmp dir
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
+;; disable lock files
+(setq create-lockfiles nil)
+
 ;; revert buffers automatically when underlying files are changed externally
 (global-auto-revert-mode t)
+
+;; real auto save file
+(defun save-all-unsaved ()
+  "Save all unsaved files. no ask.
+Version 2022-07-20"
+  (interactive)
+  (save-some-buffers t ))
+
+(if (version< emacs-version "27")
+    (add-function :after after-focus-change-function 'save-all-unsaved)
+  (setq after-focus-change-function 'save-all-unsaved))
 
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
@@ -103,17 +122,13 @@
   :config
   (electric-pair-mode +1))
 
-(use-package calendar
-  :config
-  ;; weeks in Bulgaria start on Monday
-  (setq calendar-week-start-day 1))
-
 ;; highlight the current line
 (use-package hl-line
   :config
   (global-hl-line-mode +1))
 
 (use-package abbrev
+  :diminish abbrev-mode
   :config
   (setq save-abbrevs 'silently)
   (setq-default abbrev-mode t))
@@ -129,12 +144,57 @@
   :ensure t
   :bind (("C-x g" . magit-status)))
 
+(use-package ag
+  :ensure t)
+
+(use-package projectile
+  :ensure t
+  :diminish projectile-mode
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+              ("s-p" . projectile-command-map)
+              ("C-c p" . projectile-command-map)))
+
+(use-package counsel
+  :ensure t
+  :bind
+  (("M-x"     . counsel-M-x)
+   ("C-s"     . swiper)
+   ("C-x C-f" . counsel-find-file)
+   ("C-x C-r" . counsel-recentf)  ; search for recently edited
+   ("C-c g"   . counsel-git)      ; search for files in git repo
+   ("C-c j"   . counsel-git-grep) ; search for regexp in git repo
+   ("C-c /"   . counsel-ag)       ; Use ag for regexp
+   ("C-x l"   . counsel-locate)
+   ("C-x C-f" . counsel-find-file)
+   ("<f1> f"  . counsel-describe-function)
+   ("<f1> v"  . counsel-describe-variable)
+   ("<f1> l"  . counsel-find-library)
+   ("<f2> i"  . counsel-info-lookup-symbol)
+   ("<f2> u"  . counsel-unicode-char)
+   ("C-c C-r" . ivy-resume)))     ; Resume last Ivy-based completion
+
+(use-package counsel-projectile
+  :ensure t
+  :config
+  (counsel-projectile-mode))
+
+;; 空白行削除
+;; ivyの設定はどこに書けば良い？
+;; ruby対応
+;; 補完できるようにする
+;; 複数カーソル
+;; コードジャンプできるようにする
+;; 日本語等幅にする
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(use-package)))
+ '(package-selected-packages '(diminish counsel-projectile ag projectile use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
