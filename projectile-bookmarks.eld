@@ -1,1 +1,0 @@
-("~/Work/Projects/melpServer27/" "~/work/Projects/melpServer27/" "~/.emacs.d/" "~/Work/Projects/phrappexpo/" "~/Work/Projects/melpserver2/" "~/Work/Projects/melpserver-melp-stg/" "~/Work/Projects/melpserver/" "~/Work/Projects/melp-infra/" "~/projects/my_site/")

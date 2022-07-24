@@ -21,7 +21,7 @@
 (setq use-package-verbose t)
 
 (require 'use-package)
-(require 'diminish) ; use-packageで入れる必要あるかも
+(require 'diminish)
 (require 'bind-key)
 (setq load-prefer-newer t)
 
@@ -42,7 +42,9 @@
 ;; nice scrolling
 (setq scroll-margin 0
       scroll-conservatively 100000
-      scroll-preserve-screen-position 1)
+      scroll-preserve-screen-position 1
+      mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil))
+      mouse-wheel-progressive-speed nil)
 
 (when (fboundp 'pixel-scroll-precision-mode)
   (pixel-scroll-precision-mode t))
@@ -118,6 +120,8 @@ Version 2022-07-20"
 ;; smart tab behavior - indent or complete
 (setq tab-always-indent 'complete)
 
+(show-paren-mode 1)
+
 (use-package elec-pair
   :config
   (electric-pair-mode +1))
@@ -143,6 +147,19 @@ Version 2022-07-20"
 (use-package magit
   :ensure t
   :bind (("C-x g" . magit-status)))
+
+(use-package git-gutter
+    :ensure t
+    :custom
+    (git-gutter:modified-sign "~")
+    (git-gutter:added-sign    "+")
+    (git-gutter:deleted-sign  "-")
+    :custom-face
+    (git-gutter:modified ((t (:foreground "#f1fa8c" :background "#f1fa8c"))))
+    (git-gutter:added    ((t (:foreground "#50fa7b" :background "#50fa7b"))))
+    (git-gutter:deleted  ((t (:foreground "#ff79c6" :background "#ff79c6"))))
+    :config
+    (global-git-gutter-mode +1))
 
 (use-package ag
   :ensure t)
@@ -180,10 +197,47 @@ Version 2022-07-20"
   :config
   (counsel-projectile-mode))
 
-;; 空白行削除
+(use-package amx
+  :ensure t)
+
+
+(use-package whitespace
+  :init
+  (dolist (hook '(prog-mode-hook text-mode-hook))
+    (add-hook hook #'whitespace-mode))
+  (add-hook 'before-save-hook #'whitespace-cleanup)
+  :config
+  (setq whitespace-style '(face tabs empty trailing lines-tail)))
+
+(use-package ruby-mode
+  :ensure t
+  :config
+  (setq ruby-insert-encoding-magic-comment nil))
+
+(use-package rspec-mode
+  :ensure t)
+
+(use-package ruby-end
+  :ensure t
+  :config
+  (setq ruby-end-insert-newline nil))
+
+(use-package inf-ruby
+  :ensure t
+  :config
+  (add-hook 'ruby-mode-hook #'inf-ruby-minor-mode))
+
+(use-package projectile-rails
+  :ensure t
+  :init
+  (projectile-rails-global-mode))
+
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode))
+
 ;; ivyの設定はどこに書けば良い？
-;; ruby対応
-;; 補完できるようにする
 ;; 複数カーソル
 ;; コードジャンプできるようにする
 ;; 日本語等幅にする
@@ -194,10 +248,13 @@ Version 2022-07-20"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(diminish counsel-projectile ag projectile use-package)))
+ '(package-selected-packages
+   '(git-gutter amx projectile-rails flycheck rspec-mode ruby-end inf-ruby diminish counsel-projectile ag projectile use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(git-gutter:added ((t (:foreground "#50fa7b" :background "#50fa7b"))))
+ '(git-gutter:deleted ((t (:foreground "#ff79c6" :background "#ff79c6"))))
+ '(git-gutter:modified ((t (:foreground "#f1fa8c" :background "#f1fa8c")))))
