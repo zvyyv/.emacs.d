@@ -2,4 +2,6 @@
  (magit-merge
   ("--ff-only")
   nil)
- (magit-pull nil))
+ (magit-pull
+  ("--ff-only")
+  nil))

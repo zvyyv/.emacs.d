@@ -1,4 +1,8 @@
 auto-save-list
 elpa
-init.elc
+*.elc
 savefile
+recentf
+projectile-bookmarks.eld
+amx-items
+transient

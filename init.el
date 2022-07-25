@@ -15,7 +15,6 @@
   (package-refresh-contents))
 
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
   (package-install 'use-package))
 
 (setq use-package-verbose t)
@@ -234,8 +233,7 @@ Version 2022-07-20"
 
 (use-package flycheck
   :ensure t
-  :init
-  (global-flycheck-mode))
+  :init (global-flycheck-mode))
 
 ;; ivyの設定はどこに書けば良い？
 ;; 複数カーソル
@@ -249,12 +247,10 @@ Version 2022-07-20"
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(git-gutter amx projectile-rails flycheck rspec-mode ruby-end inf-ruby diminish counsel-projectile ag projectile use-package)))
+   '(flycheck projectile-rails inf-ruby ruby-end rspec-mode amx git-gutter diminish counsel-projectile ag projectile use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(git-gutter:added ((t (:foreground "#50fa7b" :background "#50fa7b"))))
- '(git-gutter:deleted ((t (:foreground "#ff79c6" :background "#ff79c6"))))
- '(git-gutter:modified ((t (:foreground "#f1fa8c" :background "#f1fa8c")))))
+ )
