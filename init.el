@@ -10,7 +10,7 @@
 (setq user-full-name "Kota Ohno"
       user-mail-address "o139974@gmail.com")
 
-;; update the package metadata is the local cache is missing
+;; update the package metadata if the local cache is missing
 (unless package-archive-contents
   (package-refresh-contents))
 
@@ -145,20 +145,18 @@ Version 2022-07-20"
 
 (use-package magit
   :ensure t
-  :bind (("C-x g" . magit-status)))
+  :bind (("M-g s" . magit-status)))
 
-(use-package git-gutter
-    :ensure t
-    :custom
-    (git-gutter:modified-sign "~")
-    (git-gutter:added-sign    "+")
-    (git-gutter:deleted-sign  "-")
-    :custom-face
-    (git-gutter:modified ((t (:foreground "#f1fa8c" :background "#f1fa8c"))))
-    (git-gutter:added    ((t (:foreground "#50fa7b" :background "#50fa7b"))))
-    (git-gutter:deleted  ((t (:foreground "#ff79c6" :background "#ff79c6"))))
-    :config
-    (global-git-gutter-mode +1))
+(use-package browse-at-remote
+  :ensure t
+  :bind ("M-g r" . browse-at-remote))
+
+(use-package diff-hl
+  :ensure t
+  :hook (magit-post-refresh . diff-hl-magit-post-refresh)
+  (dired-mode . diff-hl-dired-mode)
+  :config (global-diff-hl-mode 1)
+  (diff-hl-flydiff-mode 1))
 
 (use-package ag
   :ensure t)
@@ -199,7 +197,6 @@ Version 2022-07-20"
 (use-package amx
   :ensure t)
 
-
 (use-package whitespace
   :init
   (dolist (hook '(prog-mode-hook text-mode-hook))
@@ -232,27 +229,21 @@ Version 2022-07-20"
   :init
   (projectile-rails-global-mode))
 
-(use-package flycheck
+;; (use-package flycheck
+;;   :ensure t
+;;   :init (global-flycheck-mode))
+
+(use-package expand-region
   :ensure t
-  :init (global-flycheck-mode))
+  :bind ("C-=" . er/expand-region))
+
+;; config changes made through the customize UI will be stored here
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 ;; ivyの設定はどこに書けば良い？
 ;; 複数カーソル
 ;; コードジャンプできるようにする
-;; まとめてコメントアウト
 ;; 日本語等幅にする
-
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(flycheck projectile-rails inf-ruby ruby-end rspec-mode amx git-gutter diminish counsel-projectile ag projectile use-package)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
