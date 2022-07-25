@@ -206,6 +206,7 @@ Version 2022-07-20"
     (add-hook hook #'whitespace-mode))
   (add-hook 'before-save-hook #'whitespace-cleanup)
   :config
+  (setq whitespace-line-column 80) ;; limit line length
   (setq whitespace-style '(face tabs empty trailing lines-tail)))
 
 (use-package ruby-mode
@@ -238,6 +239,7 @@ Version 2022-07-20"
 ;; ivyの設定はどこに書けば良い？
 ;; 複数カーソル
 ;; コードジャンプできるようにする
+;; まとめてコメントアウト
 ;; 日本語等幅にする
 
 
